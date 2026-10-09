@@ -108,6 +108,8 @@ No mock company rows enter the watchlist.
 The selected 20 stocks form an explicit demo subset, not a market-cap ranking.
 The importer derives Yahoo tickers with the `.NS` suffix.
 **Live Yahoo ticker checks have not run.** Official constituent membership does not prove Yahoo availability.
+The user paused live ticker checks. No ticker-check dependencies were installed.
+The guide's ticker checkpoint remains incomplete, so backend data building has not started.
 The CSV contains company metadata, not price history.
 
 The provider adapter validates the official schema, uniqueness, and 50-row count.

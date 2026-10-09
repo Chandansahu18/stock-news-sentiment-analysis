@@ -8,7 +8,8 @@
 - No project dependencies have been installed or tested yet.
 - No Docker command has run for this project.
 - The official-source watchlist exists and passed local validation.
-- No model or database has been built. Live ticker verification remains pending.
+- No model or database has been built. The user paused live ticker verification.
+- No ticker-check dependencies were installed and no Yahoo price requests ran.
 
 ## Approval procedure
 
@@ -88,6 +89,14 @@ All 13 checks passed. The tests use in-memory examples and a mocked network adap
 The examples do not enter the project watchlist.
 Separate local checks matched the generated rows against the actual downloaded source.
 No live prices, news, or model inference ran during these checks.
+
+## Paused live ticker checkpoint
+
+The user selected `Hold live ticker checks` on 9 October 2026 at 13:42 UTC.
+Do not install ticker-check dependencies or request Yahoo price data.
+The official-source watchlist remains complete.
+The guide requires live ticker verification before backend data building.
+Keep that checkpoint paused until the user gives a new approval.
 
 ## Future Docker startup: unavailable
 

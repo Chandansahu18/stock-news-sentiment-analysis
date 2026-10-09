@@ -119,3 +119,17 @@ The tests used in-memory examples only. The delivered watchlist uses the real do
 
 **Next operation:** request approval for live Yahoo ticker validation before database or backend data work.
 Docker, ticker requests, prices, news, model downloads, database writes, and GitHub pushes have not run.
+
+## 9 October 2026, 13:42 UTC: live ticker checks paused
+
+**Decision:** the user selected `Hold live ticker checks`.
+
+- No ticker-check dependencies were installed.
+- No Yahoo price requests ran.
+- No ticker validation report was generated.
+- The completed official-source watchlist remains unchanged.
+- Backend data building remains paused because the guide's ticker checkpoint is incomplete.
+- No news collection, model downloads, database writes, or Docker operations are authorized.
+- GitHub pushes remain blocked by repository access and owner-authentication requirements.
+
+Wait for a new user approval before the live ticker operation.
