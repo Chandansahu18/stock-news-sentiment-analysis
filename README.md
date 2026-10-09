@@ -155,6 +155,9 @@ All commits retain the owner's name and email.
 This approval does not authorize live ticker checks, further data operations, or Docker operations.
 The earlier Git bundle remains a snapshot for optional manual publication.
 See [personal-account publishing instructions](docs/publish-from-your-account.md) for that alternative.
+The foundation is published on `main`.
+The watchlist feature awaits review at `https://github.com/Chandansahu18/stock-news-sentiment-analysis/pull/1`.
+The full application is not complete, and the feature is not merged into `main`.
 
 ## Limitations
 

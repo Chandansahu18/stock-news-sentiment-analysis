@@ -178,3 +178,21 @@ Bundle validation must check the restored feature tree and rerun the 13 offline 
 - The portable bundle remains an earlier history snapshot and an optional manual publication route.
 
 Publication results will be recorded after the remote confirms the pushes and pull request.
+
+## 9 October 2026: foundation and watchlist published
+
+**Repository:** `https://github.com/Chandansahu18/stock-news-sentiment-analysis`.
+
+- Fast-forwarded local `main` to the completed foundation and pushed it successfully.
+- Pushed `vorflux/official-watchlist` successfully as a separate feature branch.
+- Checked for an existing pull request with that head branch; none existed.
+- Created `https://github.com/Chandansahu18/stock-news-sentiment-analysis/pull/1` against `main`.
+- The connected GitHub App authenticated publication with explicit user permission.
+- All commit author and committer fields retain the owner's name and email.
+- The feature is not merged into `main`.
+
+**Verification before publication:** all 13 offline tests passed.
+Local documentation links, owner commit identities, tracked-file exclusions, and staged whitespace checks passed.
+
+**Limits:** the full application is not complete.
+Live ticker checks, further data operations, and Docker operations remain paused.

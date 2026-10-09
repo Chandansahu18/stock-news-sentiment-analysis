@@ -110,7 +110,9 @@ Docker files and executable startup instructions will follow the Docker approval
 
 The user supplied `https://github.com/Chandansahu18/stock-news-sentiment-analysis.git`.
 The connected checkout uses this URL as `origin`.
-The remote access check succeeds. The remote has no commits yet.
+The remote access check succeeds. The completed foundation is published on `main`.
+The watchlist feature is published on `vorflux/official-watchlist` and awaits review.
+Pull request: `https://github.com/Chandansahu18/stock-news-sentiment-analysis/pull/1`.
 Existing local branches and feature history were transferred into this checkout.
 Local commits do not provide an off-machine backup.
 Commit author and committer settings use the owner's identity.
