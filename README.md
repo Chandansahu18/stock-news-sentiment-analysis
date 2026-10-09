@@ -53,7 +53,7 @@ The dashboard uses the API, not direct database queries.
 ## Repository structure
 
 ```text
-stock-sentiment/
+stock-news-sentiment-analysis/
 ├── README.md
 ├── CONTRIBUTING.md
 ├── pyproject.toml
@@ -143,14 +143,14 @@ These endpoints are a contract target, not implemented functionality.
 - Keep `.env`, model files, database backups, and runtime data out of Git.
 - Update this README and the execution log at each checkpoint.
 
-Git history currently stays local. No GitHub remote is configured.
-The selected destination is `https://github.com/Chandansahu18/stock-sentiment`.
-The connected GitHub integration cannot access this repository yet.
-The owner must create or connect the repository before feature pushes can start.
+Git history currently stays local. The connected checkout has an `origin` remote.
+The confirmed destination is `https://github.com/Chandansahu18/stock-news-sentiment-analysis`.
+Repository access succeeds, but the remote is empty.
 Commit author and committer settings use the project owner's identity.
 Commit identity does not change the account that authenticates a push.
 The user requires authenticated pushes as `Chandansahu18`, not an agent or app account.
-Do not push until this account is verified.
+The configured push credential belongs to a GitHub App installation.
+Do not push unless personal-account authentication succeeds or the user explicitly changes this requirement.
 
 ## Limitations
 

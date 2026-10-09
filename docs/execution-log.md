@@ -133,3 +133,20 @@ Docker, ticker requests, prices, news, model downloads, database writes, and Git
 - GitHub pushes remain blocked by repository access and owner-authentication requirements.
 
 Wait for a new user approval before the live ticker operation.
+
+## 9 October 2026: correct repository connected
+
+**User-provided destination:** `https://github.com/Chandansahu18/stock-news-sentiment-analysis.git`.
+
+- Registered the repository with the session and inspected the connected checkout.
+- Confirmed read access to the remote and found no existing commits.
+- Found no repository instruction files or existing source files to preserve.
+- Transferred existing local branches and commit history into the connected checkout.
+- Retained the owner's repository-local author and committer settings.
+- The actual Git credential belongs to a GitHub App installation.
+- A read-only GitHub account check returned HTTP 403 and did not authenticate `Chandansahu18`.
+- No credential was printed or stored in project files.
+- No push occurred because the user requires personal-account authentication.
+- Live ticker checks remain paused. No Yahoo requests or ticker dependencies were installed.
+
+**Publishing options:** personal-account push from the user's computer, or explicit permission for the connected GitHub App.

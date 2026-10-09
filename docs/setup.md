@@ -108,12 +108,16 @@ Docker files and executable startup instructions will follow the Docker approval
 
 ## Remote Git setup: pending
 
-The repository has no active remote.
-The user selected `https://github.com/Chandansahu18/stock-sentiment`.
-The access check failed because the connected datasource does not provide this repository.
-This check does not prove whether the repository exists.
-Create the repository if needed and grant the connected GitHub integration access.
-Push only after access succeeds and the remote destination is confirmed.
+The user supplied `https://github.com/Chandansahu18/stock-news-sentiment-analysis.git`.
+The connected checkout uses this URL as `origin`.
+The remote access check succeeds. The remote has no commits yet.
+Existing local branches and feature history were transferred into this checkout.
 Local commits do not provide an off-machine backup.
 Commit author and committer settings use the owner's identity.
 The authenticated push account depends on the GitHub connection, not these settings.
+The actual Git credential is a GitHub App installation credential.
+A read-only identity check did not authenticate the requested personal account.
+The user requires personal-account authentication, so no push has occurred.
+Do not run `gh auth login` or request a personal token in chat.
+The user can push a portable Git bundle from their own authenticated computer.
+Alternatively, the user can explicitly permit the connected GitHub App to push owner-authored commits.
