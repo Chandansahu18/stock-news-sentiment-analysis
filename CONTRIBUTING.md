@@ -18,6 +18,9 @@ Do not treat the final upload as a substitute for incremental feature history.
 Use commit prefixes such as `chore:`, `feat:`, `fix:`, `test:`, and `docs:`.
 Do not commit credentials, model weights, generated database files, or database backups.
 Do not push until the user provides and authorizes a remote repository.
+Use the project owner's approved name and email for commit author and committer fields.
+Do not claim that commit settings change the authenticated GitHub account.
+Confirm the user's authentication requirement before the first push.
 
 ## Keep runtime operations explicit
 

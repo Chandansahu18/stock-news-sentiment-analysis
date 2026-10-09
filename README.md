@@ -118,7 +118,11 @@ These endpoints are a contract target, not implemented functionality.
 - Update this README and the execution log at each checkpoint.
 
 Git history currently stays local. No GitHub remote is configured.
-Provide an empty repository URL when remote backup and pull requests are required.
+The selected destination is `https://github.com/Chandansahu18/stock-sentiment`.
+The connected GitHub integration cannot access this repository yet.
+The owner must create or connect the repository before feature pushes can start.
+Commit author and committer settings use the project owner's identity.
+Commit identity does not change the account that authenticates a push.
 
 ## Limitations
 

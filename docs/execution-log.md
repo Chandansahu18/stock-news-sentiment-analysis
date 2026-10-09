@@ -53,3 +53,22 @@ These checks do not verify application behavior or dependency compatibility.
 **Approval:** not requested yet.
 
 Live ticker verification requires a later, separate approval.
+
+## 9 October 2026: Git identity and remote checkpoint
+
+- The user selected `https://github.com/Chandansahu18/stock-sentiment` as the remote destination.
+- The user requested their GitHub identity instead of the agent identity.
+- Set repository-local commit author and committer settings to the owner's name and email.
+- Corrected the two unpublished commits to use that identity.
+- Confirmed the project file tree did not change during the local history correction.
+- No published history was changed. No force push occurred.
+- The read-only remote access check failed: `terminal prompts disabled`.
+- Session repository registration reported that the repository is not available through a connected datasource.
+- Remote setup and pushes remain blocked until repository access is available.
+- The authenticated push account remains unverified.
+
+**Watchlist decision:** the user skipped the approval question and delegated judgment.
+The previous rule requires explicit approval for each data operation.
+No watchlist file was created. Request explicit approval again before preparation.
+
+**Docker and data status:** no Docker or data operations have run.

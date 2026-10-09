@@ -58,7 +58,12 @@ Docker files and executable startup instructions will follow the Docker approval
 
 ## Remote Git setup: pending
 
-The repository has no remote.
-The user must provide an empty remote repository URL before remote setup.
+The repository has no active remote.
+The user selected `https://github.com/Chandansahu18/stock-sentiment`.
+The access check failed because the connected datasource does not provide this repository.
+This check does not prove whether the repository exists.
+Create the repository if needed and grant the connected GitHub integration access.
 Push only after access succeeds and the remote destination is confirmed.
 Local commits do not provide an off-machine backup.
+Commit author and committer settings use the owner's identity.
+The authenticated push account depends on the GitHub connection, not these settings.
