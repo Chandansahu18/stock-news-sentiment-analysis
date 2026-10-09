@@ -164,3 +164,17 @@ Wait for a new user approval before the live ticker operation.
 
 The publishing instructions live in `docs/publish-from-your-account.md`.
 Bundle validation must check the restored feature tree and rerun the 13 offline tests before delivery.
+
+## 9 October 2026: direct publication authorized
+
+**Decision:** the user explicitly permits the connected GitHub App to publish completed work and create the feature pull request.
+
+- Replace the personal-account-only push restriction for this project.
+- Keep the owner's name and email as commit author and committer.
+- Bootstrap the empty remote's `main` from the completed foundation.
+- Publish the official-source watchlist on `vorflux/official-watchlist` for review.
+- Do not silently merge the feature into `main`.
+- Keep live ticker checks, further data operations, and Docker operations paused.
+- The portable bundle remains an earlier history snapshot and an optional manual publication route.
+
+Publication results will be recorded after the remote confirms the pushes and pull request.

@@ -21,8 +21,9 @@ Do not push until the user provides and authorizes a remote repository.
 Use the project owner's approved name and email for commit author and committer fields.
 Do not claim that commit settings change the authenticated GitHub account.
 Confirm the user's authentication requirement before the first push.
-The user requires `Chandansahu18` for authenticated pushes as well as commit attribution.
-Do not push through an agent or app account even if that account has repository access.
+The user explicitly permits the connected GitHub App to publish completed work and create pull requests.
+Keep the owner's name and email as commit author and committer.
+This permission does not authorize live ticker checks, other data operations, or Docker operations.
 
 ## Keep runtime operations explicit
 

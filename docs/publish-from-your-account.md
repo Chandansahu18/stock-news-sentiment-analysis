@@ -1,5 +1,10 @@
 # Publish from your personal GitHub account
 
+These instructions accompanied the earlier portable bundle.
+The user later authorized direct publication through the connected GitHub App.
+Manual publication is optional. Check the existing remote before following bootstrap commands.
+Do not recreate `main` or overwrite history when the remote already contains the published work.
+
 ## What this bundle contains
 
 The bundle contains the complete local Git history and three local branches:

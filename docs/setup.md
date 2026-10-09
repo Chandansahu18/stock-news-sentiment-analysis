@@ -117,10 +117,11 @@ Commit author and committer settings use the owner's identity.
 The authenticated push account depends on the GitHub connection, not these settings.
 The actual Git credential is a GitHub App installation credential.
 A read-only identity check did not authenticate the requested personal account.
-The user requires personal-account authentication, so no push has occurred.
+The user first kept personal-account-only pushes and requested a portable bundle.
 Do not run `gh auth login` or request a personal token in chat.
 The user can push a portable Git bundle from their own authenticated computer.
-Alternatively, the user can explicitly permit the connected GitHub App to push owner-authored commits.
-The user chose to keep personal-account-only pushes.
-Follow `publish-from-your-account.md` to publish the bundle from the owner's computer.
-No push from this session is authorized.
+The user later explicitly permitted the connected GitHub App to publish and create pull requests.
+Keep the owner's name and email as commit author and committer.
+Bootstrap `main` from the completed foundation, then publish the watchlist feature branch separately.
+This permission does not authorize live ticker checks, further data operations, or Docker operations.
+The manual publication guide remains an alternative, not the active publishing requirement.

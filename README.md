@@ -143,16 +143,18 @@ These endpoints are a contract target, not implemented functionality.
 - Keep `.env`, model files, database backups, and runtime data out of Git.
 - Update this README and the execution log at each checkpoint.
 
-Git history currently stays local. The connected checkout has an `origin` remote.
+The connected checkout has an `origin` remote.
 The confirmed destination is `https://github.com/Chandansahu18/stock-news-sentiment-analysis`.
-Repository access succeeds, but the remote is empty.
+Publish the completed foundation on `main` and the watchlist feature on its own branch.
 Commit author and committer settings use the project owner's identity.
 Commit identity does not change the account that authenticates a push.
-The user requires authenticated pushes as `Chandansahu18`, not an agent or app account.
 The configured push credential belongs to a GitHub App installation.
-Do not push unless personal-account authentication succeeds or the user explicitly changes this requirement.
-The user kept the personal-account-only rule and requested a portable Git bundle.
-See [personal-account publishing instructions](docs/publish-from-your-account.md).
+The user explicitly authorizes the connected GitHub App to publish and create pull requests.
+GitHub can record the App as the pusher or pull request author.
+All commits retain the owner's name and email.
+This approval does not authorize live ticker checks, further data operations, or Docker operations.
+The earlier Git bundle remains a snapshot for optional manual publication.
+See [personal-account publishing instructions](docs/publish-from-your-account.md) for that alternative.
 
 ## Limitations
 
