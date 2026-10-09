@@ -151,6 +151,8 @@ Commit identity does not change the account that authenticates a push.
 The user requires authenticated pushes as `Chandansahu18`, not an agent or app account.
 The configured push credential belongs to a GitHub App installation.
 Do not push unless personal-account authentication succeeds or the user explicitly changes this requirement.
+The user kept the personal-account-only rule and requested a portable Git bundle.
+See [personal-account publishing instructions](docs/publish-from-your-account.md).
 
 ## Limitations
 

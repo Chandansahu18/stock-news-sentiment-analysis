@@ -121,3 +121,6 @@ The user requires personal-account authentication, so no push has occurred.
 Do not run `gh auth login` or request a personal token in chat.
 The user can push a portable Git bundle from their own authenticated computer.
 Alternatively, the user can explicitly permit the connected GitHub App to push owner-authored commits.
+The user chose to keep personal-account-only pushes.
+Follow `publish-from-your-account.md` to publish the bundle from the owner's computer.
+No push from this session is authorized.

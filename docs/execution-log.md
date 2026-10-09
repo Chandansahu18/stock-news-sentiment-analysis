@@ -150,3 +150,17 @@ Wait for a new user approval before the live ticker operation.
 - Live ticker checks remain paused. No Yahoo requests or ticker dependencies were installed.
 
 **Publishing options:** personal-account push from the user's computer, or explicit permission for the connected GitHub App.
+
+## 9 October 2026: portable publication approved
+
+**Decision:** the user kept personal-account-only pushes.
+
+- Prepare a portable Git bundle with the complete local history.
+- Provide commands for the user to publish from their own authenticated computer.
+- Keep owner-authored foundation and watchlist commits separate.
+- Document that the full application is not complete.
+- Do not push from this session.
+- Keep live ticker checks and further data and Docker operations paused.
+
+The publishing instructions live in `docs/publish-from-your-account.md`.
+Bundle validation must check the restored feature tree and rerun the 13 offline tests before delivery.
