@@ -72,3 +72,18 @@ The previous rule requires explicit approval for each data operation.
 No watchlist file was created. Request explicit approval again before preparation.
 
 **Docker and data status:** no Docker or data operations have run.
+
+## 9 October 2026: confirmed identity and real-data requirement
+
+- The user requires `Chandansahu18` for both commit attribution and authenticated pushes.
+- Pushes remain paused until the authenticated account and repository access are verified.
+- The user explicitly approved CSV preparation without external requests.
+- The user then requested online Indian stock metadata instead of hand-entered candidate rows.
+- This changes the approved CSV operation to use an external source.
+- Proposed source: `https://www.niftyindices.com/IndexConstituent/ind_nifty50list.csv`.
+- The official structured export avoids fragile HTML table extraction.
+- Request separate approvals for fetching the source and generating the watchlist from that source.
+- Keep the previously proposed 20 symbols only when the official constituent file contains them.
+- Stop and report missing symbols rather than inventing company rows.
+
+The watchlist contains company metadata. Live ticker verification and price collection are later operations.

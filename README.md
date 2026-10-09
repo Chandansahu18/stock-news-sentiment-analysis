@@ -123,6 +123,8 @@ The connected GitHub integration cannot access this repository yet.
 The owner must create or connect the repository before feature pushes can start.
 Commit author and committer settings use the project owner's identity.
 Commit identity does not change the account that authenticates a push.
+The user requires authenticated pushes as `Chandansahu18`, not an agent or app account.
+Do not push until this account is verified.
 
 ## Limitations
 
@@ -139,7 +141,7 @@ Commit identity does not change the account that authenticates a push.
 
 ## Next checkpoints
 
-1. Obtain approval to prepare the 20-stock watchlist.
+1. Obtain approval to download official Nifty 50 company metadata and generate the 20-stock watchlist.
 2. Obtain approval for the live ticker verification operation.
 3. Implement the backend modules and pass the stored-data checkpoint.
 4. Implement and verify the API, then the dashboard.

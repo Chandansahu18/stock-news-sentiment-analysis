@@ -2,7 +2,11 @@
 
 The approved `watchlist.csv` will contain stock metadata only.
 Its columns will be `symbol`, `name`, `yahoo_ticker`, and `news_query`.
-Watchlist preparation requires explicit approval and has not started.
+The user approved CSV preparation, then requested real company metadata from the internet.
+Watchlist preparation has not started because external download approval is pending.
+Use an official source rather than invented or manually guessed company rows.
+Record the source URL, retrieval time, and content hash for the generated watchlist.
+Do not replace missing official constituents with mock rows.
 
 Ticker validation must pass before database seeding.
 Yahoo availability does not prove current Nifty 50 membership.
