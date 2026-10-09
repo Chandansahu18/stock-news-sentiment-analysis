@@ -158,7 +158,8 @@ See [personal-account publishing instructions](docs/publish-from-your-account.md
 The foundation is published on `main`.
 The official-source watchlist is integrated into `main` after explicit user approval.
 Pull request history: `https://github.com/Chandansahu18/stock-news-sentiment-analysis/pull/1`.
-Delete completed remote feature branches only after their commits are preserved on `main`.
+The merged remote watchlist branch is deleted. All feature commits remain on `main`.
+Delete future remote feature branches only after their commits are preserved on `main`.
 The full application is not complete. Live ticker checks and Docker operations remain paused.
 
 ## Limitations

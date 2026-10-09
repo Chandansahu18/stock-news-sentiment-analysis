@@ -111,8 +111,8 @@ Docker files and executable startup instructions will follow the Docker approval
 The user supplied `https://github.com/Chandansahu18/stock-news-sentiment-analysis.git`.
 The connected checkout uses this URL as `origin`.
 The remote access check succeeds. The completed foundation is published on `main`.
-The user approved integrating the watchlist feature into `main` and removing its remote branch afterward.
-Preserve all feature commits on `main` before remote branch cleanup.
+The watchlist feature is merged into `main` with all original commits preserved.
+The remote `vorflux/official-watchlist` branch is deleted after merge verification.
 Pull request: `https://github.com/Chandansahu18/stock-news-sentiment-analysis/pull/1`.
 Existing local branches and feature history were transferred into this checkout.
 Local commits do not provide an off-machine backup.
@@ -126,5 +126,6 @@ The user can push a portable Git bundle from their own authenticated computer.
 The user later explicitly permitted the connected GitHub App to publish and create pull requests.
 Keep the owner's name and email as commit author and committer.
 Bootstrap `main` from the completed foundation, then publish the watchlist feature branch separately.
+The user subsequently approved integrating that feature and cleaning up the merged remote branch.
 This permission does not authorize live ticker checks, further data operations, or Docker operations.
 The manual publication guide remains an alternative, not the active publishing requirement.

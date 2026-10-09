@@ -211,3 +211,18 @@ Live ticker checks, further data operations, and Docker operations remain paused
 - Keep live ticker checks, further data operations, and Docker operations paused.
 
 Integration and cleanup results will be recorded after remote verification.
+
+## 9 October 2026: watchlist integration and cleanup completed
+
+- Fast-forwarded and published `main` with every watchlist feature commit preserved.
+- GitHub confirmed pull request 1 as merged at `2026-10-09T14:46:14Z`.
+- Verified that the pull request head is an ancestor of published `main`.
+- Deleted only the remote `vorflux/official-watchlist` branch.
+- Confirmed the remote branch is absent and the feature commits remain on `main`.
+- No source data, tests, or commit history were removed.
+- Retained the owner's author and committer identity.
+
+The user now requests a working project preview.
+No API or dashboard implementation exists yet, so no working preview URL is available.
+Confirm the demo scope before changing the paused live-data operation or building a limited preview.
+No new data or Docker operation ran during integration and branch cleanup.
