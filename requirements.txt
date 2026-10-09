@@ -1,0 +1,4 @@
+# Install CPU-only PyTorch separately before the worker dependencies.
+# These are dependency ranges, not a tested deployment lock.
+# Freeze tested versions before the approved Docker build.
+-e .[api,worker,dashboard]
