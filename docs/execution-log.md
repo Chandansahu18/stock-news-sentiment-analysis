@@ -196,3 +196,18 @@ Local documentation links, owner commit identities, tracked-file exclusions, and
 
 **Limits:** the full application is not complete.
 Live ticker checks, further data operations, and Docker operations remain paused.
+
+## 9 October 2026: watchlist integration and cleanup approved
+
+**Decision:** the user approves merging the completed watchlist changes into `main`, then deleting only the remote feature branch.
+
+- Confirmed that `main` was six commits behind the open pull request.
+- Confirmed that `main` is an ancestor of the feature branch.
+- Reran all 13 offline regression tests; every test passed.
+- Keep every feature commit and the owner's commit identity.
+- Use a fast-forward integration without rewriting history.
+- Verify the published `main` and merged pull request before deleting the remote branch.
+- Update documentation to distinguish completed watchlist work from the unfinished application.
+- Keep live ticker checks, further data operations, and Docker operations paused.
+
+Integration and cleanup results will be recorded after remote verification.

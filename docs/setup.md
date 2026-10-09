@@ -111,7 +111,8 @@ Docker files and executable startup instructions will follow the Docker approval
 The user supplied `https://github.com/Chandansahu18/stock-news-sentiment-analysis.git`.
 The connected checkout uses this URL as `origin`.
 The remote access check succeeds. The completed foundation is published on `main`.
-The watchlist feature is published on `vorflux/official-watchlist` and awaits review.
+The user approved integrating the watchlist feature into `main` and removing its remote branch afterward.
+Preserve all feature commits on `main` before remote branch cleanup.
 Pull request: `https://github.com/Chandansahu18/stock-news-sentiment-analysis/pull/1`.
 Existing local branches and feature history were transferred into this checkout.
 Local commits do not provide an off-machine backup.
