@@ -4,9 +4,10 @@ A demo for Indian stock prices, company news, and headline sentiment.
 The first release targets 20 stocks from the Nifty 50 universe.
 The watchlist will control stock coverage without code changes.
 
-**Current status:** repository and documentation foundation only.
+**Current status:** repository foundation and official-source watchlist import complete.
 The API, worker, database, dashboard, and Docker setup do not exist yet.
-No market data or model files have been downloaded.
+The watchlist contains 20 company rows from the official Nifty 50 export.
+No live prices, news, model files, or database records have been collected.
 
 **Deadline:** 10 October 2026, 12:00 IST (06:30 UTC).
 
@@ -58,9 +59,11 @@ stock-sentiment/
 ├── pyproject.toml
 ├── requirements.txt
 ├── .env.example
-├── src/stock_sentiment/  # Importable application package
+├── src/stock_sentiment/
+│   ├── providers/       # Official-source adapter
+│   └── ingestion/      # Explicit watchlist operations
 ├── dashboard/           # Streamlit interface, added after the API checkpoint
-├── data/                # Approved watchlist; runtime data stays outside Git
+├── data/                # Approved watchlist and provenance receipt
 ├── scripts/             # Explicit verification and maintenance commands
 ├── tests/               # Unit, integration, and model test guidance
 └── docs/
@@ -90,6 +93,27 @@ Dependency ranges live in `pyproject.toml`.
 CPU-only PyTorch requires a separate installation from its official CPU index.
 The dependency set is not installed or verified yet.
 We will pin tested deployment versions before a Docker build.
+
+## Official-source watchlist
+
+Source: <https://www.niftyindices.com/IndexConstituent/ind_nifty50list.csv>.
+The approved download succeeded on 9 October 2026 at 13:35 UTC.
+The source contained 50 unique constituents and all 20 approved demo symbols.
+
+`data/watchlist.csv` preserves the official company names.
+`data/watchlist.source.json` records the source URL, retrieval time, selection method, and hashes.
+The raw downloaded source stays in ignored runtime storage.
+No mock company rows enter the watchlist.
+
+The selected 20 stocks form an explicit demo subset, not a market-cap ranking.
+The importer derives Yahoo tickers with the `.NS` suffix.
+**Live Yahoo ticker checks have not run.** Official constituent membership does not prove Yahoo availability.
+The CSV contains company metadata, not price history.
+
+The provider adapter validates the official schema, uniqueness, and 50-row count.
+The importer rejects changed source hashes and missing approved stocks.
+It does not substitute invented rows or switch sources after a failed request.
+See [watchlist operation commands](docs/setup.md#official-watchlist-operations).
 
 ## Planned API endpoints
 
@@ -141,12 +165,11 @@ Do not push until this account is verified.
 
 ## Next checkpoints
 
-1. Obtain approval to download official Nifty 50 company metadata and generate the 20-stock watchlist.
-2. Obtain approval for the live ticker verification operation.
-3. Implement the backend modules and pass the stored-data checkpoint.
-4. Implement and verify the API, then the dashboard.
-5. Obtain approval for each Docker operation.
-6. Verify the stack and obtain approval for the database backup operation.
-7. Record the working dashboard and rehearse the demo.
+1. Obtain approval for the live ticker verification operation.
+2. Implement the backend modules and pass the stored-data checkpoint.
+3. Implement and verify the API, then the dashboard.
+4. Obtain approval for each Docker operation.
+5. Verify the stack and obtain approval for the database backup operation.
+6. Record the working dashboard and rehearse the demo.
 
 See [module explanations](docs/architecture.md) and the [execution log](docs/execution-log.md).

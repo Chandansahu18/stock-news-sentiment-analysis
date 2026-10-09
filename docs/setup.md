@@ -7,7 +7,8 @@
 - The package declares Python 3.11 and 3.12 support as a target.
 - No project dependencies have been installed or tested yet.
 - No Docker command has run for this project.
-- No watchlist, model, or database has been built.
+- The official-source watchlist exists and passed local validation.
+- No model or database has been built. Live ticker verification remains pending.
 
 ## Approval procedure
 
@@ -47,6 +48,46 @@ Resolve and pin tested dependencies before the Docker build.
 The guide places Docker after the dashboard.
 The core database checkpoint still needs PostgreSQL earlier.
 If Docker supplies that early database, request approval for that operation before it runs.
+
+## Official watchlist operations
+
+The approved source download completed with one public HTTPS request.
+The importer validated all 50 constituent rows before generation.
+The generation step preserved official names for all 20 approved symbols.
+
+The following commands document the reusable operations.
+**Do not rerun either operation without a new approval.**
+Each command refuses to overwrite existing outputs.
+
+Download operation:
+
+```bash
+PYTHONPATH=src python3 -m stock_sentiment.ingestion.watchlist download
+```
+
+Generation operation:
+
+```bash
+PYTHONPATH=src python3 -m stock_sentiment.ingestion.watchlist generate \
+  --source-sha256 <sha256-from-download-output> \
+  --retrieved-at <utc-timestamp-from-download-output>
+```
+
+The generation command never requests a network resource.
+It checks the source hash before it writes the CSV and receipt.
+It fails when an approved symbol is absent from the official source.
+The source receipt records retrieval time, not the index's effective rebalance date.
+
+Offline importer checks:
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests/unit -v
+```
+
+All 13 checks passed. The tests use in-memory examples and a mocked network adapter.
+The examples do not enter the project watchlist.
+Separate local checks matched the generated rows against the actual downloaded source.
+No live prices, news, or model inference ran during these checks.
 
 ## Future Docker startup: unavailable
 

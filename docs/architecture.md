@@ -1,7 +1,8 @@
 # Module responsibilities and reasons
 
 This document describes the target architecture.
-Only the package foundation exists now.
+The package foundation, official-source adapter, and watchlist importer exist now.
+The remaining runtime modules are planned.
 
 | Module | Responsibility | Why the boundary exists |
 | --- | --- | --- |
@@ -28,6 +29,19 @@ Only the package foundation exists now.
 8. Show the results and source limitations in the dashboard.
 
 Each preparation, download, initialization, and ingestion operation requires approval.
+
+## Implemented watchlist boundary
+
+`providers/nifty.py` reads the official structured export.
+It rejects redirects, invalid schemas, duplicate symbols, and unexpected constituent counts.
+It uses a 20-second request timeout and a 1 MiB response limit.
+It makes no request during import.
+
+`ingestion/watchlist.py` separates source download from local watchlist generation.
+The generation function validates the receipt hash and approved stock selection before writing outputs.
+It preserves official names and derives Yahoo tickers and news queries.
+It refuses to overwrite existing outputs without review.
+This boundary lets a user approve source retrieval and transformation independently.
 
 ## Reliability rules
 

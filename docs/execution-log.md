@@ -87,3 +87,35 @@ No watchlist file was created. Request explicit approval again before preparatio
 - Stop and report missing symbols rather than inventing company rows.
 
 The watchlist contains company metadata. Live ticker verification and price collection are later operations.
+
+## 9 October 2026: official watchlist feature
+
+**Approvals:** the user explicitly approved the official source download and subsequent CSV generation separately.
+
+**Download result:**
+
+- Made one public request to the approved Nifty Indices URL.
+- Received a 3,344-byte constituent CSV with 50 unique company symbols.
+- Recorded retrieval time as `2026-10-09T13:35:12.059898+00:00`.
+- Validated the schema before saving the source in ignored runtime storage.
+- No fallback source, redirect, authentication bypass, or retry was used.
+
+**Generation result:**
+
+- The official source contained all 20 approved symbols.
+- Created `data/watchlist.csv` with the four required columns.
+- Preserved each official company name exactly.
+- Derived `.NS` tickers and company-name news queries.
+- Created `data/watchlist.source.json` with the source URL, retrieval time, and hashes.
+- No mock company rows or live price rows entered the CSV.
+
+**Reusable implementation:** added a bounded provider adapter and separate download/generation commands.
+
+**Verification:** all 13 offline regression tests passed.
+Independent local checks confirmed 20 unique rows, exact official company names, and both receipt hashes.
+The tests used in-memory examples only. The delivered watchlist uses the real downloaded source.
+
+**Git:** feature work uses `vorflux/official-watchlist`. Owner-authenticated pushes remain blocked.
+
+**Next operation:** request approval for live Yahoo ticker validation before database or backend data work.
+Docker, ticker requests, prices, news, model downloads, database writes, and GitHub pushes have not run.

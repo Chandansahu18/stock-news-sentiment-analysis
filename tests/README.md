@@ -1,6 +1,14 @@
 # Verification strategy
 
-No application tests exist yet because only the package foundation exists.
+The official watchlist feature has 13 offline regression tests.
+They check source parsing, bounds, duplicate rejection, missing symbols, hash validation, and timestamps.
+They also check derived `.NS` tickers, query generation, and bounded mocked downloads.
+Test examples stay in memory and never become the project watchlist.
+All 13 checks passed on Python 3.12.3.
+
+```bash
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=src python3 -m unittest discover -s tests/unit -v
+```
 
 ## Offline unit tests
 

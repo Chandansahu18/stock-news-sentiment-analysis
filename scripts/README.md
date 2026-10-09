@@ -9,5 +9,9 @@ It will check every ticker from the approved CSV with bounded provider requests.
 It must report failed tickers and return a failing exit status when checks fail.
 It must not silently remove stocks from the watchlist.
 
-No operational scripts exist yet.
+The official watchlist commands live in `stock_sentiment.ingestion.watchlist`.
+Use `python -m` entry points instead of manipulating import paths inside scripts.
+The module exposes separate `download` and `generate` commands.
+See `docs/setup.md` for approval rules and command examples.
+The ticker verification script does not exist yet.
 Request approval before executing each data operation.
