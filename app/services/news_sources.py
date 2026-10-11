@@ -43,7 +43,7 @@ def collect_articles(settings: Settings, company_name: str, instrument_key: str 
                 last_error = str(exc)
                 log.warning("Upstox news failed: %s", exc)
         else:
-            last_error = "Upstox news needs UPSTOX_ANALYTICS_TOKEN and a resolved instrument key"
+            last_error = "Upstox news is not set up yet."
 
     if not articles and wanted in ("auto", "google"):
         try:
@@ -54,7 +54,7 @@ def collect_articles(settings: Settings, company_name: str, instrument_key: str 
             log.warning("Google News failed: %s", exc)
 
     if not source:
-        raise NewsUnavailableError(last_error or "No news source available")
+        raise NewsUnavailableError(last_error or "No news source is available right now.")
 
     articles = remove_duplicate_titles(articles)
     articles.sort(key=lambda article: article["published_at"], reverse=True)

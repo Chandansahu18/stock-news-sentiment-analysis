@@ -51,7 +51,7 @@ def test_last_price(monkeypatch):
     assert upstox.fetch_last_price("tok", KEY) == 3999.5
 
 
-@pytest.mark.parametrize("status,fragment", [(401, "rejected"), (403, "rejected"), (429, "rate limit"), (500, "HTTP 500")])
+@pytest.mark.parametrize("status,fragment", [(401, "rejected"), (403, "rejected"), (429, "too many requests"), (500, "HTTP 500")])
 def test_errors_never_leak_the_token(monkeypatch, status, fragment):
     monkeypatch.setattr(http, "get", lambda *a, **k: FakeResponse(status_code=status))
     with pytest.raises(upstox.UpstoxError) as exc:
@@ -106,7 +106,7 @@ def test_cloudflare_block_page_is_not_reported_as_a_bad_token(monkeypatch):
     monkeypatch.setattr(http, "get", lambda *a, **k: firewall_block_response())
     with pytest.raises(upstox.UpstoxError) as exc:
         upstox.fetch_quotes("tok", ["NSE_EQ|A"])
-    assert "firewall" in str(exc.value) and "token" not in str(exc.value).lower()
+    assert "temporarily blocking" in str(exc.value) and "token" not in str(exc.value).lower()
 
 
 def test_after_a_block_no_requests_are_sent_until_the_cooldown_ends(monkeypatch):
@@ -115,7 +115,7 @@ def test_after_a_block_no_requests_are_sent_until_the_cooldown_ends(monkeypatch)
     for _ in range(4):  # one real request, then three stopped locally
         with pytest.raises(upstox.UpstoxError) as exc:
             upstox.fetch_last_price("tok", "NSE_EQ|A")
-        assert "paused until" in str(exc.value) and "IST" in str(exc.value)
+        assert "paused price requests until" in str(exc.value) and "IST" in str(exc.value)
     assert len(calls) == 1
 
     upstox._blocked_until = upstox.time.time() - 1  # the cooldown has passed

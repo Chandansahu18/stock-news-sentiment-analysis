@@ -1,4 +1,4 @@
-"""The "Today's stocks" selector, its explanatory notes and the row of ranked stocks to pick from."""
+"""The "What's moving today" selector, its explanatory notes and the row of ranked stocks to pick from."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ def render() -> list[dict] | None:
     """Draw the section and return the ranked stocks, or None if the page cannot continue."""
     mode = (
         st.segmented_control(
-            "Today's stocks",
+            "What's moving today",
             list(components.MODE_LABELS),
             default="active",
             format_func=components.MODE_LABELS.get,
@@ -28,20 +28,20 @@ def render() -> list[dict] | None:
     try:
         top = get_cached("/stocks/top", mode=mode)
     except ApiError as error:
-        st.html(components.notice("Today's stocks are unavailable", str(error), "error"))
+        st.html(components.notice("We could not load today's stocks", str(error), "error"))
         return None
 
     if top["fallback"]:
-        st.html(components.notice("Showing the default watchlist", top.get("warning") or "Live rankings are unavailable."))
+        st.html(components.notice("Showing a starter list of popular stocks", top.get("warning") or "Live rankings are not available right now."))
     elif top["stale"]:
-        st.html(components.notice("Showing the last saved ranking", f'Refreshing failed: {top.get("warning", "unknown error")}'))
+        st.html(components.notice("Showing the most recent list we have", f'We could not update it just now. {top.get("warning", "")}'.strip()))
     caption = components.top_stocks_caption(top, datetime.now(IST).date().isoformat())
     if caption:
         st.html(f'<p class="pv-meta">{escape(caption)}</p>')
 
     ranked = top["stocks"]
     if not ranked and selection.selected_symbol() is None:
-        st.html(components.notice("Nothing to show yet", "No stocks matched this ranking today. Try another list or search above."))
+        st.html(components.notice("No stocks to show yet", "Nothing matched this list today. Try another list, or search for a company above."))
         return None
     selection.select_first_if_nothing_selected(ranked)
 

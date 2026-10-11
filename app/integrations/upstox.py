@@ -36,8 +36,8 @@ def reset_block() -> None:
 def _blocked_message() -> str:
     until = datetime.fromtimestamp(_blocked_until, IST).strftime("%H:%M")
     return (
-        "Upstox's firewall (Cloudflare) is blocking requests from this network. Upstox calls are paused "
-        f"until {until} IST so this app does not extend the block. News still loads from Google."
+        "Upstox is temporarily blocking requests from this network. We have paused price requests "
+        f"until {until} IST to let the block clear. News still loads from Google."
     )
 
 
@@ -45,7 +45,9 @@ def _call_api(token: str, path: str, params: dict | None = None) -> dict:
     """GET one Upstox endpoint and return the parsed JSON body, or raise UpstoxError."""
     global _blocked_until
     if not token:
-        raise UpstoxError("UPSTOX_ANALYTICS_TOKEN is not set")
+        raise UpstoxError(
+            "Live prices are not set up yet. Add your Upstox key (UPSTOX_ANALYTICS_TOKEN) to the .env file, then restart the app."
+        )
     if time.time() < _blocked_until:
         raise UpstoxError(_blocked_message())  # no request is sent while the breaker is open
 
@@ -55,25 +57,25 @@ def _call_api(token: str, path: str, params: dict | None = None) -> dict:
             params=params,
             headers={"Accept": "application/json", "Authorization": f"Bearer {token}"},
         )
-    except requests.RequestException as exc:
-        raise UpstoxError(f"Could not reach Upstox ({type(exc).__name__})") from None
+    except requests.RequestException:
+        raise UpstoxError("We could not reach Upstox. Please check your internet connection and try again.") from None
 
     if response.status_code in (401, 403):
         if "html" in response.headers.get("content-type", "").lower():
             # A web page instead of JSON means the CDN/firewall blocked us, not that the token is wrong.
             _blocked_until = time.time() + BLOCK_COOLDOWN_SECONDS
             raise UpstoxError(_blocked_message())
-        raise UpstoxError("Upstox rejected the token (expired, invalid, or not permitted for this API)")
+        raise UpstoxError("Upstox rejected your access key. It may have expired, or it may not allow this kind of data.")
     if response.status_code == 429:
-        raise UpstoxError("Upstox rate limit hit, try again shortly")
+        raise UpstoxError("Upstox is getting too many requests right now. Please try again in a minute.")
     if response.status_code != 200:
-        raise UpstoxError(f"Upstox returned HTTP {response.status_code}")
+        raise UpstoxError(f"Upstox had a problem (HTTP {response.status_code}). Please try again shortly.")
     try:
         body = response.json()
     except ValueError:
-        raise UpstoxError("Upstox returned a non-JSON response") from None
+        raise UpstoxError("Upstox sent a reply we could not read. Please try again shortly.") from None
     if body.get("status") != "success":
-        raise UpstoxError("Upstox reported an error")
+        raise UpstoxError("Upstox reported an error. Please try again shortly.")
     return body
 
 

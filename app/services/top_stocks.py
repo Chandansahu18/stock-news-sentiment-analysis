@@ -47,11 +47,11 @@ def build_ranking(token: str, listing: dict, count: int) -> dict:
     equities_by_symbol = {equity["symbol"]: equity for equity in listing.get("equities", [])}
     universe = [equities_by_symbol[symbol] for symbol in listing.get("fno_symbols", []) if symbol in equities_by_symbol]
     if not universe:
-        raise RankingError("The F&O stock list is not available yet")
+        raise RankingError("The list of stocks is still loading. Please try again in a moment.")
     equity_by_key = {equity["key"]: equity for equity in universe}
     quotes = upstox.fetch_quotes(token, list(equity_by_key))
     if not quotes:
-        raise RankingError("Upstox returned no quotes")
+        raise RankingError("No live prices were available.")
     lists = {}
     for mode, ranked_quotes in rank_quotes(quotes, count).items():
         lists[mode] = [
@@ -94,7 +94,9 @@ def _load_or_build_ranking(today: str) -> dict:
     if cached is not None:
         return cached
     if not settings.upstox_token:
-        return _watchlist_fallback("Live rankings need UPSTOX_ANALYTICS_TOKEN. Showing the default watchlist.")
+        return _watchlist_fallback(
+            "Live rankings are not set up yet. Add your Upstox key (UPSTOX_ANALYTICS_TOKEN) to the .env file to turn them on."
+        )
 
     with lock_for(key):  # one user builds the ranking; the rest reuse it
         cached = cache.get_fresh(key, settings.top_stocks_ttl_seconds)
@@ -106,7 +108,7 @@ def _load_or_build_ranking(today: str) -> dict:
             previous = cache.get_even_if_expired(LATEST_KEY)
             if previous:
                 return {**previous, "stale": True, "warning": str(exc)}
-            return _watchlist_fallback(f"Live rankings are unavailable: {exc} Showing the default watchlist.")
+            return _watchlist_fallback(f"We could not load live rankings. {exc}")
         payload = {**built, "date": today, "as_of": clock.now_utc_iso(), "fallback": False, "stale": False, "warning": None}
         cache.save(key, payload)
         cache.save(LATEST_KEY, payload)

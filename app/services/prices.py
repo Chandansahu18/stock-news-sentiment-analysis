@@ -60,11 +60,11 @@ def get_prices(symbol: str, days: int = 30) -> dict:
         return {**cached, "stale": False}
     if not settings.upstox_token:
         raise DataUnavailableError(
-            "UPSTOX_ANALYTICS_TOKEN is not set. Put it in a file named .env (copy .env.example to .env) "
-            "in the project folder, then restart the API."
+            "Live prices are not set up yet. Add your Upstox key (UPSTOX_ANALYTICS_TOKEN) to the .env file "
+            "(copy .env.example to .env if you do not have one), then restart the app."
         )
     if not stock.get("key"):
-        raise DataUnavailableError("Could not resolve the Upstox instrument key for this symbol")
+        raise DataUnavailableError("We could not find price data for this stock.")
 
     with lock_for(key):
         try:
@@ -75,7 +75,7 @@ def get_prices(symbol: str, days: int = 30) -> dict:
                 return {**older, "stale": True, "warning": str(exc)}
             raise DataUnavailableError(str(exc)) from None
         if not candles:
-            raise DataUnavailableError("Upstox returned no price data for this period")
+            raise DataUnavailableError("No prices were found for this period. Try a longer one.")
 
         payload = {
             "symbol": stock["symbol"],

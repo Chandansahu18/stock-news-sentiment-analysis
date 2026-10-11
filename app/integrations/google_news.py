@@ -39,7 +39,7 @@ def fetch_news(company_name: str, limit: int = 30) -> list[dict]:
         response.raise_for_status()
         feed = ET.fromstring(response.content)
     except (requests.RequestException, ET.ParseError) as exc:
-        raise GoogleNewsError(f"Could not fetch Google News ({type(exc).__name__})") from None
+        raise GoogleNewsError("We could not reach Google News. Please check your internet connection and try again.") from None
 
     articles = []
     for item in feed.iterfind("./channel/item"):

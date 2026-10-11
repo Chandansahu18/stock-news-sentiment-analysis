@@ -36,15 +36,15 @@ def call_api(method: str, path: str, params: dict | None = None, timeout: int = 
         response = requests.request(method, f"{base_url}{path}", params=params, timeout=timeout)
     except requests.RequestException:
         raise ApiError(
-            f"The dashboard cannot reach the API at {base_url}. Start it with: "
-            "uvicorn app.main:app --host 127.0.0.1 --port 8010"
+            f"We cannot reach the data service at {base_url} right now. If you are running this app yourself, "
+            "start it with: uvicorn app.main:app --host 127.0.0.1 --port 8010"
         ) from None
     if response.status_code != 200:
         try:
             detail = response.json().get("detail", "")
         except ValueError:
             detail = ""
-        raise ApiError(detail if isinstance(detail, str) and detail else f"The API returned an error (HTTP {response.status_code}).")
+        raise ApiError(detail if isinstance(detail, str) and detail else f"Something went wrong on our side (code {response.status_code}). Please try again in a moment.")
     return response.json()
 
 

@@ -11,17 +11,17 @@ from ui.api_client import ApiError, call_api, clear_cache, get_cached, stock_pat
 from ui.formatting import format_timestamp
 from ui.theme import SENTIMENT_LABELS, SENTIMENT_ORDER
 
-WINDOWS = {"Today": 1, "3 days": 3, "7 days": 7}
+WINDOWS = {"Today": 1, "Last 3 days": 3, "Last 7 days": 7}
 WIDEST_WINDOW_DAYS = max(WINDOWS.values())
 FILTERS = ("all", *SENTIMENT_ORDER)
 
 
 def render_heading() -> None:
-    st.html('<h2 class="pv-h2">News sentiment</h2>')
+    st.html('<h2 class="pv-h2">What the news is saying</h2>')
 
 
 def render_controls() -> str:
-    """Draw the period selector and return its label ("Today", "3 days" or "7 days")."""
+    """Draw the period selector and return its label ("Today", "Last 3 days" or "Last 7 days")."""
     return st.segmented_control("News from", list(WINDOWS), default="Today", key="news_window") or "Today"
 
 
@@ -35,7 +35,7 @@ def refresh(symbol: str) -> None:
         call_api("POST", stock_path(symbol, "refresh"))
         clear_cache()
     except ApiError as error:
-        st.toast(f"Refresh failed: {error}", icon=":material/error:")
+        st.toast(f"We could not refresh the news: {error}", icon=":material/error:")
 
 
 def _widen_if_empty(symbol: str, window_label: str, news: dict) -> tuple[dict, bool]:
@@ -52,17 +52,17 @@ def _widen_if_empty(symbol: str, window_label: str, news: dict) -> tuple[dict, b
 def render(slot, stock: dict, result, window_label: str) -> None:
     """Fill `slot` with the news, or with a notice if `result` is an ApiError."""
     if isinstance(result, ApiError):
-        slot.html(components.notice("News could not be loaded", str(result), "error"))
+        slot.html(components.notice("We could not load the news", str(result), "error"))
         return
     news, widened = _widen_if_empty(stock["symbol"], window_label, result)
     articles = news["articles"]
     with slot.container():
         if news.get("stale"):
-            st.html(components.notice("Showing saved results", f'Refreshing failed: {news.get("warning", "unknown error")}'))
+            st.html(components.notice("Showing news we saved earlier", f'We could not check for new headlines just now. {news.get("warning", "")}'.strip()))
         if widened:
-            st.html(components.notice("No articles for the selected period", f'Nothing was published for "{window_label}". Showing the past 7 days instead.'))
+            st.html(components.notice("No news for the time you picked", f'We found nothing for "{window_label}", so here is the past week instead.'))
         if not articles:
-            st.html(components.notice(f'No recent news for {stock["name"]}', "Nothing was published in the last week, or the news source returned no matches. Try Refresh news later."))
+            st.html(components.notice(f'No recent news for {stock["name"]}', "We found nothing from the past week. Try Get latest news again a little later."))
             return
         st.html(components.sentiment_summary(news["summary"]))
         _render_articles(news, articles)
@@ -76,6 +76,5 @@ def _render_articles(news: dict, articles: list[dict]) -> None:
     if shown:
         st.html(components.article_list(shown))
     else:
-        st.html(components.notice(f"No {chosen} articles", "Pick another filter to see the rest."))
-    origin = "saved copy" if news.get("from_cache") else "just fetched"
-    st.html(f'<p class="pv-meta">Source: {escape(news["source"].title())}. Updated {escape(format_timestamp(news["fetched_at"]))} ({origin}).</p>')
+        st.html(components.notice(f"No {chosen} news in this list", "Pick another filter to see the rest."))
+    st.html(f'<p class="pv-meta">News from {escape(news["source"].title())}. Last updated {escape(format_timestamp(news["fetched_at"]))}.</p>')

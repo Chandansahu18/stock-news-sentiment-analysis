@@ -122,7 +122,7 @@ See `.env.example` for every setting. Main ones: `UPSTOX_ANALYTICS_TOKEN`, `NEWS
 pytest
 ```
 
-134 tests. All network calls and the model are mocked, so they run offline in a few seconds. They cover each module,
+135 tests. All network calls and the model are mocked, so they run offline in a few seconds. They cover each module,
 the API, the dashboard (with Streamlit's test runner), accessibility contrast of the real theme, and that the
 price/news requests really run at the same time.
 

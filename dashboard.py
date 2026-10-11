@@ -12,7 +12,7 @@ from ui import components, theme
 from ui.api_client import fetch_concurrently
 from ui.sections import news, page_frame, price, search, selection, top_stocks
 
-st.set_page_config(page_title="Stock news sentiment", page_icon=":material/monitoring:", layout="wide")
+st.set_page_config(page_title=page_frame.PAGE_TITLE, page_icon=":material/monitoring:", layout="wide")
 st.html(f"<style>{theme.stylesheet()}</style>")
 
 page_frame.render_header()

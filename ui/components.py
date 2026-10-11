@@ -12,9 +12,13 @@ from urllib.parse import urlparse
 from .formatting import format_day, format_rupees, format_signed, format_timestamp
 from .theme import SENTIMENT_LABELS, SENTIMENT_ORDER
 
-# The "Today's stocks" lists, in the order they are offered.
-MODE_LABELS = {"active": "Most active", "gainers": "Top gainers", "losers": "Top losers"}
-MODE_EXPLANATIONS = {"active": "highest traded value", "gainers": "biggest rise", "losers": "biggest fall"}
+# The "What's moving today" lists, in the order they are offered.
+MODE_LABELS = {"active": "Most traded", "gainers": "Top gainers", "losers": "Top losers"}
+MODE_EXPLANATIONS = {
+    "active": "Stocks with the most money changing hands",
+    "gainers": "Stocks whose price rose the most",
+    "losers": "Stocks whose price fell the most",
+}
 
 
 def safe_link_url(url: str | None) -> str:
@@ -37,10 +41,10 @@ def price_summary(stock: dict, prices: dict) -> str:
     direction = _direction(prices["change"])
     change_text = f'{format_signed(prices["change"])} ({format_signed(prices["change_pct"])}%)'
     facts = [
-        ("Previous close", format_rupees(prices["previous_close"])),
-        ("Period high", format_rupees(period_high)),
-        ("Period low", format_rupees(period_low)),
-        ("Updated", format_timestamp(prices["as_of"])),
+        ("Last close", format_rupees(prices["previous_close"])),
+        ("Highest in this period", format_rupees(period_high)),
+        ("Lowest in this period", format_rupees(period_low)),
+        ("Last updated", format_timestamp(prices["as_of"])),
     ]
     facts_html = "".join(f"<div><dt>{escape(label)}</dt><dd>{escape(value)}</dd></div>" for label, value in facts)
     return (
@@ -72,12 +76,12 @@ def sentiment_summary(summary: dict) -> str:
         for label in SENTIMENT_ORDER
     )
     description = ", ".join(f"{int(counts.get(label, 0))} {label}" for label in SENTIMENT_ORDER)
-    noun = "article" if total == 1 else "articles"
+    noun = "headline" if total == 1 else "headlines"
     return (
-        '<section class="pv-sentsum" aria-label="Sentiment summary">'
+        '<section class="pv-sentsum" aria-label="News mood summary">'
         '<div class="pv-overall">'
         f'<p class="pv-verdict pv-t-{escape(overall)}">{escape(SENTIMENT_LABELS[overall])}</p>'
-        f'<p class="pv-score">Average score {escape(format_signed(summary["average_score"]))} on a scale from -1 to +1, across {total} {noun}</p>'
+        f'<p class="pv-score">Based on {total} {noun}</p>'
         "</div>"
         f'<div class="pv-stack" role="img" aria-label="{escape(description)}">{bar_segments}</div>'
         f'<ul class="pv-legend">{legend}</ul>'
@@ -103,7 +107,7 @@ def article_row(item: dict) -> str:
         '<div class="pv-sent">'
         f'<i class="pv-mark pv-m-{escape(label)}" aria-hidden="true"></i>'
         f'<span class="pv-sent-label">{escape(SENTIMENT_LABELS.get(label, label))}</span>'
-        f'<span class="pv-conf">{sentiment["score"]:.0%} confidence</span>'
+        f'<span class="pv-conf">{sentiment["score"]:.0%} sure</span>'
         "</div>"
         f'<div class="pv-body">{title_html}{summary_html}<p class="pv-meta">{escape(byline)}</p></div>'
         "</article>"
@@ -121,13 +125,16 @@ def stock_pill_label(stock: dict) -> str:
 
 
 def top_stocks_caption(top: dict, today_iso: str) -> str:
-    """One plain line saying what the ranked list is and which trading day it covers."""
+    """One plain line saying what the list shows and which trading day it covers."""
     if top.get("fallback"):
         return ""
     day = format_day(top.get("session_date"))
     market_closed = bool(top.get("session_date")) and top["session_date"] != today_iso
-    when = f"Last trading session ({day}), markets are closed now." if market_closed else (f"Trading session {day}." if day else "")
-    return f'{MODE_LABELS[top["mode"]]}: {MODE_EXPLANATIONS[top["mode"]]} among {top["universe"]} F&O stocks. {when}'.strip()
+    if market_closed:
+        when = f"The market is closed now, so this is from the last trading day ({day})."
+    else:
+        when = f"Based on today's trading ({day})." if day else ""
+    return f'{MODE_EXPLANATIONS[top["mode"]]}, out of {top["universe"]} widely followed stocks. {when}'.strip()
 
 
 def notice(title: str, body: str, tone: str = "info") -> str:

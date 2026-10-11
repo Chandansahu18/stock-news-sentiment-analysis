@@ -13,7 +13,7 @@ def register_error_handlers(app: FastAPI) -> None:
     async def unknown_symbol(_: Request, __: UnknownSymbolError) -> JSONResponse:
         return JSONResponse(
             status_code=404,
-            content={"detail": "Unknown symbol. Use GET /stocks/search?q=<name> to find a listed NSE stock."},
+            content={"detail": "We could not find that stock. Search by company name or stock code (for example TCS) to find a listed NSE stock."},
         )
 
     @app.exception_handler(DataUnavailableError)

@@ -86,9 +86,10 @@ def _html(at):
 def test_dashboard_shows_search_and_todays_stocks(monkeypatch):
     at = _run(monkeypatch)
     assert not at.exception
-    assert at.text_input[0].label == "Search stocks"
-    assert {"Today's stocks", "Pick a stock", "Price range", "News from", "Show"} <= _labels(at)
-    assert at.button[0].label == "Refresh news"
+    assert "Stocks News Mood" in _html(at)
+    assert at.text_input[0].label == "Search for a company"
+    assert {"What's moving today", "Pick a stock", "Price history", "News from", "Show"} <= _labels(at)
+    assert at.button[0].label == "Get latest news"
     pick = [p for p in at.get("pills") if p.label == "Pick a stock"][0]
     assert pick.value == "TCS"  # the first stock of the ranking is selected by default
 
@@ -107,25 +108,25 @@ def test_search_box_calls_the_api_and_shows_matches(monkeypatch):
 def test_search_with_no_match_says_so(monkeypatch):
     at = _run(monkeypatch)
     at.text_input[0].set_value("zzzz").run()
-    assert not at.exception and "No NSE stock matches" in _html(at)
+    assert not at.exception and "We could not find" in _html(at) and "zzzz" in _html(at)
 
 
 def test_news_window_widens_when_nothing_is_dated_today(monkeypatch):
     at = _run(monkeypatch, articles_by_days={1: [], 7: ARTICLES})
     assert not at.exception
     html = _html(at)
-    assert "No articles for the selected period" in html and "TCS wins deal" in html
+    assert "No news for the time you picked" in html and "TCS wins deal" in html
 
 
 def test_dashboard_falls_back_when_rankings_are_unavailable(monkeypatch):
     at = _run(monkeypatch, fallback=True)
-    assert not at.exception and "Showing the default watchlist" in _html(at)
+    assert not at.exception and "Showing a starter list of popular stocks" in _html(at)
 
 
 def test_dashboard_handles_missing_token_and_empty_news(monkeypatch):
     at = _run(monkeypatch, articles_by_days={}, fail_prices=True)
     assert not at.exception  # both states are shown inline, not as a crash
-    assert "Price data is unavailable" in _html(at) and "No recent news" in _html(at)
+    assert "Price is not available right now" in _html(at) and "No recent news" in _html(at)
 
 
 

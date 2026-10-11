@@ -56,7 +56,7 @@ def test_safe_links_open_in_a_new_tab_without_opener_access():
 
 def test_article_shows_label_text_and_confidence_not_just_colour():
     html = components.article_row(make_item())
-    assert "Positive" in html and "91% confidence" in html and 'aria-hidden="true"' in html
+    assert "Positive" in html and "91% sure" in html and 'aria-hidden="true"' in html
 
 
 # ---------- components ----------
@@ -65,12 +65,20 @@ def test_sentiment_summary_has_a_text_alternative():
     summary = {"overall": "positive", "average_score": 0.29, "article_count": 6, "counts": {"positive": 4, "neutral": 1, "negative": 1}}
     html = components.sentiment_summary(summary)
     assert 'aria-label="4 positive, 1 neutral, 1 negative"' in html
-    assert "+0.29" in html and "flex:4" in html and "4 positive" in html
+    assert "Positive" in html and "Based on 6 headlines" in html and "flex:4" in html and "4 positive" in html
 
 
-def test_sentiment_summary_uses_the_singular_for_one_article():
+def test_sentiment_summary_speaks_plainly_without_scores_or_jargon():
+    summary = {"overall": "negative", "average_score": -0.4, "article_count": 3, "counts": {"positive": 0, "neutral": 1, "negative": 2}}
+    html = components.sentiment_summary(summary)
+    assert "Negative" in html
+    for jargon in ("-0.40", "scale", "Average score", "confidence"):
+        assert jargon not in html
+
+
+def test_sentiment_summary_uses_the_singular_for_one_headline():
     summary = {"overall": "neutral", "average_score": -0.12, "article_count": 1, "counts": {"positive": 0, "neutral": 1, "negative": 0}}
-    assert "across 1 article<" in components.sentiment_summary(summary)
+    assert "Based on 1 headline<" in components.sentiment_summary(summary)
 
 
 def test_empty_sentiment_summary_renders_nothing():
@@ -104,7 +112,10 @@ def test_stock_pill_label_carries_direction_in_text():
 
 def test_caption_explains_the_list_and_the_session():
     top = {"mode": "active", "session_date": "2026-10-09", "universe": 213, "fallback": False}
-    assert components.top_stocks_caption(top, "2026-10-09") == "Most active: highest traded value among 213 F&O stocks. Trading session 09 Oct."
+    assert components.top_stocks_caption(top, "2026-10-09") == (
+        "Stocks with the most money changing hands, out of 213 widely followed stocks. Based on today's trading (09 Oct)."
+    )
     closed = components.top_stocks_caption(top, "2026-10-11")
-    assert "Last trading session (09 Oct)" in closed and "markets are closed" in closed
+    assert "last trading day (09 Oct)" in closed and "market is closed" in closed
+    assert "F&O" not in closed
     assert components.top_stocks_caption({**top, "fallback": True}, "2026-10-11") == ""
