@@ -1,0 +1,42 @@
+[server]
+# Serves ./static (the self-hosted Geist font) at /app/static/
+enableStaticServing = true
+
+[browser]
+gatherUsageStats = false
+
+[client]
+toolbarMode = "minimal"
+
+# One shape rule for the whole app: widgets and containers use 0.5rem corners.
+# One accent (cobalt) for focus, selection and primary actions, in both modes.
+[theme]
+font = "Geist"
+headingFont = "Geist"
+baseRadius = "0.5rem"
+buttonRadius = "0.5rem"
+showWidgetBorder = true
+headingFontSizes = ["1.75rem", "1.375rem", "1.125rem", "1rem", "0.9375rem", "0.875rem"]
+headingFontWeights = [600, 600, 600, 600, 600, 600]
+
+[[theme.fontFaces]]
+family = "Geist"
+url = "app/static/Geist-Variable.woff2"
+weight = "100 900"
+style = "normal"
+
+[theme.light]
+primaryColor = "#3558c8"
+backgroundColor = "#fafafa"
+secondaryBackgroundColor = "#f1f1f3"
+textColor = "#18181b"
+linkColor = "#3558c8"
+borderColor = "#e4e4e7"
+
+[theme.dark]
+primaryColor = "#3558c8"
+backgroundColor = "#101012"
+secondaryBackgroundColor = "#1a1b1e"
+textColor = "#ededf0"
+linkColor = "#8fa8ee"
+borderColor = "#2a2b2f"
