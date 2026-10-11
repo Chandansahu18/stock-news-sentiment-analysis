@@ -1,0 +1,11 @@
+torch==2.14.1
+transformers==5.19.0
+fastapi==0.143.0
+uvicorn[standard]==0.54.0
+streamlit==1.65.0
+plotly==7.1.0
+pandas==3.0.6
+requests==2.34.2
+python-dotenv==1.2.4
+defusedxml==0.7.1
+pytest==9.1.1
