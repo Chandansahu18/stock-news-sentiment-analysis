@@ -6,7 +6,7 @@ from tests.helpers import FakeResponse, firewall_block_response
 KEY = "NSE_EQ|INE467B01029"
 
 
-# ---------- candles, last price, news ----------
+# ---------- candles and last price ----------
 
 def test_candles_are_parsed_sorted_and_the_token_is_sent(monkeypatch):
     seen = {}
@@ -32,17 +32,6 @@ def test_candles_are_parsed_sorted_and_the_token_is_sent(monkeypatch):
     assert candles[1]["close"] == 104.0
     assert "NSE_EQ%7CINE467B01029" in seen["url"] and "/days/1/" in seen["url"]
     assert seen["headers"]["Authorization"] == "Bearer SECRET-TOKEN"
-
-
-def test_news_is_parsed(monkeypatch):
-    body = {
-        "status": "success",
-        "data": {KEY: [{"heading": "TCS up", "summary": "s", "article_link": "https://u/1", "published_time": 1760000000000}, {"heading": "", "published_time": 1}]},
-    }
-    monkeypatch.setattr(http, "get", lambda *a, **k: FakeResponse(json_data=body))
-    items = upstox.fetch_news("tok", KEY)
-    assert len(items) == 1 and items[0]["title"] == "TCS up" and items[0]["source"] == "Upstox"
-    assert items[0]["published_at"].endswith("+00:00")
 
 
 def test_last_price(monkeypatch):
@@ -128,5 +117,5 @@ def test_after_a_block_no_requests_are_sent_until_the_cooldown_ends(monkeypatch)
 def test_block_message_has_no_em_or_en_dashes(monkeypatch):
     monkeypatch.setattr(http, "get", lambda *a, **k: firewall_block_response())
     with pytest.raises(upstox.UpstoxError) as exc:
-        upstox.fetch_news("tok", "NSE_EQ|A")
+        upstox.fetch_last_price("tok", "NSE_EQ|A")
     assert "\u2014" not in str(exc.value) and "\u2013" not in str(exc.value)

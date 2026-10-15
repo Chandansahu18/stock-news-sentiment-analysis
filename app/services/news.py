@@ -69,7 +69,7 @@ def get_news(symbol: str, refresh: bool = False, days: int | None = None) -> dic
     stock = stocks.find_stock(symbol)
     settings = get_settings()
     cache = get_cache()
-    key = f"news_{stock['symbol']}"
+    key = f"news2_{stock['symbol']}"  # "news2": news saved before headlines were checked against the stock is never reused
 
     if not refresh:
         cached = cache.get_fresh(key, settings.news_ttl_seconds)
@@ -83,9 +83,8 @@ def get_news(symbol: str, refresh: bool = False, days: int | None = None) -> dic
                 return filter_to_last_days({**cached, "from_cache": True, "stale": False}, days)
 
         previous = cache.get_even_if_expired(key)
-        instrument_key = stock.get("key") if settings.upstox_token and settings.news_source != "google" else None
         try:
-            articles, source = news_sources.collect_articles(settings, stock["name"], instrument_key)
+            articles, source = news_sources.collect_articles(settings, stock)
         except news_sources.NewsUnavailableError as exc:
             if previous:  # serve the last good result instead of failing
                 return filter_to_last_days({**previous, "from_cache": True, "stale": True, "warning": str(exc)}, days)

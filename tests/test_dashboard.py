@@ -32,7 +32,7 @@ def _news(articles, days):
     for a in articles:
         counts[a["sentiment"]["label"]] += 1
     return {
-        "symbol": "TCS", "name": "x", "source": "upstox", "fetched_at": "2026-10-10T19:00:00+00:00", "stale": False, "from_cache": True,
+        "symbol": "TCS", "name": "x", "source": "google", "fetched_at": "2026-10-10T19:00:00+00:00", "stale": False, "from_cache": True,
         "window_days": days,
         "summary": {"overall": "neutral", "average_score": 0.05, "article_count": len(articles), "counts": counts},
         "articles": articles,

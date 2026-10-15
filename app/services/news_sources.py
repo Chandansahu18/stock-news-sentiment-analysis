@@ -1,4 +1,4 @@
-"""Choose where news comes from (Upstox first, Google News as the fallback), then clean the result."""
+"""Get a stock's news from Google News RSS, keep only headlines about that stock, and clean the result."""
 
 from __future__ import annotations
 
@@ -6,13 +6,17 @@ import logging
 import re
 
 from app.config import Settings
-from app.integrations import google_news, upstox
+from app.integrations import google_news
+from . import news_matching
 
 log = logging.getLogger(__name__)
 
+SOURCE_NAME = "google"
+GOOGLE_RESULT_LIMIT = 100  # Google returns at most this many per search; most are dropped by the headline check
+
 
 class NewsUnavailableError(Exception):
-    """No news source could be reached (the message is safe to show to users)."""
+    """The news source could not be reached (the message is safe to show to users)."""
 
 
 def remove_duplicate_titles(articles: list[dict]) -> list[dict]:
@@ -27,35 +31,17 @@ def remove_duplicate_titles(articles: list[dict]) -> list[dict]:
     return unique
 
 
-def collect_articles(settings: Settings, company_name: str, instrument_key: str | None) -> tuple[list[dict], str]:
-    """Return (articles newest first, name of the source that supplied them)."""
-    articles: list[dict] = []
-    source = ""
-    last_error = ""
-    wanted = settings.news_source
+def collect_articles(settings: Settings, stock: dict) -> tuple[list[dict], str]:
+    """Return (articles about this stock, newest first; name of the source). `stock` has "symbol" and "name"."""
+    aliases = news_matching.aliases_for(stock)
+    try:
+        articles = google_news.fetch_news(aliases, GOOGLE_RESULT_LIMIT)
+    except google_news.GoogleNewsError as exc:
+        log.warning("Google News failed: %s", exc)
+        raise NewsUnavailableError(str(exc)) from None
 
-    if wanted in ("auto", "upstox"):
-        if settings.upstox_token and instrument_key:
-            try:
-                articles = upstox.fetch_news(settings.upstox_token, instrument_key, settings.max_articles * 2)
-                source = "upstox"
-            except upstox.UpstoxError as exc:
-                last_error = str(exc)
-                log.warning("Upstox news failed: %s", exc)
-        else:
-            last_error = "Upstox news is not set up yet."
-
-    if not articles and wanted in ("auto", "google"):
-        try:
-            articles = google_news.fetch_news(company_name, settings.max_articles * 2)
-            source = "google"
-        except google_news.GoogleNewsError as exc:
-            last_error = str(exc)
-            log.warning("Google News failed: %s", exc)
-
-    if not source:
-        raise NewsUnavailableError(last_error or "No news source is available right now.")
-
+    is_about_stock = news_matching.headline_matcher(aliases)
+    articles = [article for article in articles if is_about_stock(article["title"])]
     articles = remove_duplicate_titles(articles)
     articles.sort(key=lambda article: article["published_at"], reverse=True)
-    return articles[: settings.max_articles], source
+    return articles[: settings.max_articles], SOURCE_NAME

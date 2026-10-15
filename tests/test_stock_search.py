@@ -79,7 +79,7 @@ def test_search_input_is_validated(client):
 
 
 def test_any_listed_stock_is_accepted_not_just_the_watchlist(client, monkeypatch):
-    monkeypatch.setattr(news_sources, "collect_articles", lambda settings, name, key: ([], "google"))
+    monkeypatch.setattr(news_sources, "collect_articles", lambda settings, stock: ([], "google"))
     monkeypatch.setattr(finbert, "score_texts", fake_score_texts)
     assert client.get("/stocks/INFOBEAN/news").status_code == 200  # not in watchlist.json
     assert client.get("/stocks/NOTLISTED/news").status_code == 404

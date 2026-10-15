@@ -14,9 +14,9 @@ from dotenv import load_dotenv
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 WATCHLIST_PATH = PROJECT_ROOT / "watchlist.json"
+ALIASES_PATH = PROJECT_ROOT / "stock_aliases.json"
 load_dotenv(PROJECT_ROOT / ".env")
 
-NEWS_SOURCES = {"auto", "upstox", "google"}
 MIN_TOP_STOCKS, MAX_TOP_STOCKS = 10, 20
 
 
@@ -34,8 +34,7 @@ def _read_bool(name: str, default: bool) -> bool:
 
 @dataclass(frozen=True)
 class Settings:
-    upstox_token: str
-    news_source: str            # auto | upstox | google
+    upstox_token: str           # prices and rankings only; news comes from Google News RSS
     cache_dir: Path
     news_ttl_seconds: int       # how long scored news is served from cache
     price_ttl_seconds: int
@@ -51,12 +50,8 @@ def get_settings() -> Settings:
     cache_dir = Path(os.getenv("CACHE_DIR", "cache"))
     if not cache_dir.is_absolute():
         cache_dir = PROJECT_ROOT / cache_dir
-    news_source = os.getenv("NEWS_SOURCE", "auto").strip().lower()
-    if news_source not in NEWS_SOURCES:
-        news_source = "auto"
     return Settings(
         upstox_token=os.getenv("UPSTOX_ANALYTICS_TOKEN", "").strip(),
-        news_source=news_source,
         cache_dir=cache_dir,
         news_ttl_seconds=_read_int("NEWS_TTL_MINUTES", 30) * 60,
         price_ttl_seconds=_read_int("PRICE_TTL_MINUTES", 5) * 60,

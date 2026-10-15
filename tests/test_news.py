@@ -12,7 +12,7 @@ def fakes(monkeypatch):
     """Two articles from a fake source, a fake model, and counters for how often each ran."""
     calls = {"collect": 0, "scored": 0}
 
-    def fake_collect(settings, name, instrument_key):
+    def fake_collect(settings, stock):
         calls["collect"] += 1
         return [make_article("TCS up on deal", "https://x/1"), make_article("TCS down on probe", "https://x/2", "2026-10-09T09:00:00+00:00")], "google"
 
@@ -48,7 +48,7 @@ def test_refresh_refetches_but_does_not_rescore_known_articles(client, fakes):
 def test_older_news_is_served_when_the_sources_fail(client, fakes, monkeypatch):
     client.get("/stocks/TCS/news")
 
-    def sources_down(settings, name, instrument_key):
+    def sources_down(settings, stock):
         raise news_sources.NewsUnavailableError("sources down")
 
     monkeypatch.setattr(news_sources, "collect_articles", sources_down)
@@ -57,7 +57,7 @@ def test_older_news_is_served_when_the_sources_fail(client, fakes, monkeypatch):
 
 
 def test_503_when_sources_fail_and_nothing_is_cached(client, monkeypatch):
-    def sources_down(settings, name, instrument_key):
+    def sources_down(settings, stock):
         raise news_sources.NewsUnavailableError("sources down")
 
     monkeypatch.setattr(news_sources, "collect_articles", sources_down)
@@ -98,7 +98,7 @@ def test_days_parameter_on_the_endpoint(client, monkeypatch):
         make_article("fresh headline up", "https://x/1", now.isoformat()),
         make_article("old headline down", "https://x/2", (now - timedelta(days=4)).isoformat()),
     ]
-    monkeypatch.setattr(news_sources, "collect_articles", lambda settings, name, key: (articles, "google"))
+    monkeypatch.setattr(news_sources, "collect_articles", lambda settings, stock: (articles, "google"))
     monkeypatch.setattr(finbert, "score_texts", fake_score_texts)
     assert len(client.get("/stocks/TCS/news").json()["articles"]) == 2
     one_day = client.get("/stocks/TCS/news?days=1").json()

@@ -16,15 +16,27 @@ RSS = b"""<?xml version="1.0" encoding="UTF-8"?>
 
 def test_parses_cleans_titles_and_skips_undated_items(monkeypatch):
     monkeypatch.setattr(http, "get", lambda *a, **k: FakeResponse(content=RSS))
-    items = google_news.fetch_news("Tata Consultancy Services", limit=10)
+    items = google_news.fetch_news(["Tata Consultancy Services"], limit=10)
     assert [i["title"] for i in items] == ["TCS wins big deal", "TCS shares fall"]
     assert items[0]["source"] == "Economic Times"
     assert items[0]["published_at"].startswith("2026-10-09T10:00:00")
 
 
+def test_searches_for_every_name_of_the_company(monkeypatch):
+    seen = {}
+
+    def fake_get(url, params=None, headers=None, **kwargs):
+        seen.update(params)
+        return FakeResponse(content=RSS)
+
+    monkeypatch.setattr(http, "get", fake_get)
+    google_news.fetch_news(["Hindustan Petroleum", "HPCL"])
+    assert seen["q"] == '("Hindustan Petroleum" OR "HPCL") when:7d'
+
+
 def test_respects_the_limit(monkeypatch):
     monkeypatch.setattr(http, "get", lambda *a, **k: FakeResponse(content=RSS))
-    assert len(google_news.fetch_news("x", limit=1)) == 1
+    assert len(google_news.fetch_news(["x"], limit=1)) == 1
 
 
 def test_network_error_becomes_a_safe_message(monkeypatch):
@@ -33,10 +45,10 @@ def test_network_error_becomes_a_safe_message(monkeypatch):
 
     monkeypatch.setattr(http, "get", offline)
     with pytest.raises(google_news.GoogleNewsError):
-        google_news.fetch_news("x")
+        google_news.fetch_news(["x"])
 
 
 def test_rejects_garbage_xml(monkeypatch):
     monkeypatch.setattr(http, "get", lambda *a, **k: FakeResponse(content=b"<html>not rss"))
     with pytest.raises(google_news.GoogleNewsError):
-        google_news.fetch_news("x")
+        google_news.fetch_news(["x"])

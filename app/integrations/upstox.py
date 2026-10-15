@@ -1,4 +1,4 @@
-"""Upstox client: daily candles, last price, live quotes and instrument news.
+"""Upstox client: daily candles, last price and live quotes.
 
 Uses a read-only Analytics Token as a Bearer token. The token is only ever placed in the
 Authorization header; it is never logged or included in error messages.
@@ -10,7 +10,7 @@ block, so all Upstox calls are paused for a few minutes and fail instantly with 
 from __future__ import annotations
 
 import time
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 from urllib.parse import quote as url_quote
 
 import requests
@@ -157,28 +157,3 @@ def fetch_quotes(token: str, instrument_keys: list[str], batch_size: int = 100) 
             )
     return quotes
 
-
-def fetch_news(token: str, instrument_key: str, limit: int = 30) -> list[dict]:
-    """News for one instrument (Upstox returns the past 7 days)."""
-    body = _call_api(
-        token,
-        "/v2/news",
-        {"category": "instrument_keys", "instrument_keys": instrument_key, "page_size": min(limit, 100)},
-    )
-    items = (body.get("data") or {}).get(instrument_key) or []
-    articles = []
-    for item in items:
-        title = (item.get("heading") or "").strip()
-        published_ms = item.get("published_time")
-        if not title or not isinstance(published_ms, (int, float)):
-            continue
-        articles.append(
-            {
-                "title": title,
-                "summary": (item.get("summary") or "").strip(),
-                "url": item.get("article_link") or "",
-                "source": "Upstox",
-                "published_at": datetime.fromtimestamp(published_ms / 1000, tz=timezone.utc).isoformat(),
-            }
-        )
-    return articles

@@ -21,7 +21,7 @@ Each layer only talks to the one below it:
 |---|---|---|
 | Dashboard | `dashboard.py`, `ui/` | Draws the page. Reaches the backend only through `ui/api_client.py`. |
 | API | `app/api/`, `app/main.py` | Validates requests, shapes responses, maps errors to HTTP codes. No business logic. |
-| Services | `app/services/` | One module per use-case: `stocks` (directory and search), `top_stocks`, `news`, `news_sources`, `prices`. |
+| Services | `app/services/` | One module per use-case: `stocks` (directory and search), `top_stocks`, `news`, `news_sources`, `news_matching`, `prices`. |
 | Integrations | `app/integrations/` | The outside world: `upstox`, `google_news`, `nse_listing`, `finbert`, and the shared `http` session. |
 | Cache | `app/cache.py` | The only code that touches disk. Replace `JsonFileCache` to move to PostgreSQL later. |
 
@@ -30,7 +30,7 @@ Small shared helpers: `config.py` (settings), `errors.py`, `clock.py` (IST dates
 | Part | Choice | Why |
 |---|---|---|
 | Prices | Upstox API (Analytics Token) | Official broker data for NSE |
-| News | Upstox News API, fallback Google News RSS | Upstox first; RSS needs no key and covers Indian companies |
+| News | Google News RSS | No key needed, covers Indian companies. Searched by every name the stock goes by (for example "Hindustan Petroleum" and "HPCL"), then only headlines that contain one of those names are kept. |
 | Sentiment | `ProsusAI/finbert` (Hugging Face) | Pretrained on finance text, runs locally, no training needed |
 | Storage | JSON files with expiry, behind `app/cache.py` | Scoring is the slow step, so results are cached. It is a cache, not a store of record. |
 | API | FastAPI | Auto docs at `/docs`, request validation |
@@ -112,9 +112,9 @@ If the news sources are down, the last cached result is returned with `"stale": 
 
 ## Configuration (`.env`)
 
-See `.env.example` for every setting. Main ones: `UPSTOX_ANALYTICS_TOKEN`, `NEWS_SOURCE` (`auto`/`upstox`/`google`),
+See `.env.example` for every setting. Main ones: `UPSTOX_ANALYTICS_TOKEN` (prices and rankings only),
 `NEWS_TTL_MINUTES`, `PRICE_TTL_MINUTES`, `MAX_ARTICLES`, `TOP_STOCKS_COUNT`, `TOP_STOCKS_TTL_MINUTES`,
-`PRELOAD_ON_STARTUP`, `API_BASE_URL`. `watchlist.json` holds the default watchlist and the preferred company names used for news search.
+`PRELOAD_ON_STARTUP`, `API_BASE_URL`. `watchlist.json` holds the default watchlist and the preferred company names. `stock_aliases.json` lists extra names that headlines use for a stock when they cannot be worked out from its name or ticker (for example `"HINDUNILVR": ["HUL"]`); add a line there if a stock's news looks thin.
 
 ## Tests
 
@@ -122,7 +122,7 @@ See `.env.example` for every setting. Main ones: `UPSTOX_ANALYTICS_TOKEN`, `NEWS
 pytest
 ```
 
-135 tests. All network calls and the model are mocked, so they run offline in a few seconds. They cover each module,
+157 tests. All network calls and the model are mocked, so they run offline in a few seconds. They cover each module,
 the API, the dashboard (with Streamlit's test runner), accessibility contrast of the real theme, and that the
 price/news requests really run at the same time.
 
@@ -144,9 +144,9 @@ After changing `config.toml`, restart Streamlit (theme settings are read at star
 ## Known limitations
 
 - **No authentication or rate limiting on the API.** Keep it bound to `127.0.0.1`. Add authentication before exposing it anywhere.
-- Upstox price, news and ranking calls are covered by mocked tests. The ranking call (`/v2/market-quote/quotes`) has not been verified against live Upstox yet, because Upstox's firewall (Cloudflare) was blocking this machine when it was built. Check it with your token once the block clears.
+- Upstox price and ranking calls are covered by mocked tests. The ranking call (`/v2/market-quote/quotes`) has not been verified against live Upstox yet, because Upstox's firewall (Cloudflare) was blocking this machine when it was built. Check it with your token once the block clears.
 - FinBERT works on headlines and can misjudge some of them (for example dividend news scored negative). Google News results can include non-news pages, which are scored neutral.
-- Articles are linked to a stock by the news source (Upstox tags by instrument, Google searches the company name). Roundup headlines that mention several companies count toward each of them.
+- A headline is linked to a stock only if the headline itself contains one of the stock's names (company name, ticker, an acronym such as HPCL, or an entry in `stock_aliases.json`). Google also matches words buried in the article body, so without this check unrelated stories (an RBI rupee story under HPCL) slipped in. The price of this strictness: a story about "oil marketing companies" that never names the stock is left out, and a quiet stock may show few headlines. Roundup headlines that name several companies count toward each of them. Tickers that are also ordinary words (for example `OIL`, `ITC` for Input Tax Credit) can still let a few off-topic headlines through.
 - The daily ranking covers F&O stocks only (about 210), not all 2,700 listed names. There is no history or trend: the cache only holds the latest fetch.
 - The 5 minute Upstox pause is kept in memory, so restarting the API clears it.
 - Port 8010 is used because 8000 is commonly taken (for example by Docker).

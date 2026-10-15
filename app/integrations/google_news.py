@@ -1,4 +1,4 @@
-"""Google News RSS: the free fallback news source (no API key, good coverage of Indian companies)."""
+"""Google News RSS: the news source for every stock (no API key, good coverage of Indian companies)."""
 
 from __future__ import annotations
 
@@ -26,10 +26,15 @@ def _to_utc_iso(rss_date: str | None) -> str | None:
         return None
 
 
-def fetch_news(company_name: str, limit: int = 30) -> list[dict]:
-    """Headlines from the last 7 days that mention the company, newest first as Google returns them."""
+def fetch_news(search_terms: list[str], limit: int = 100) -> list[dict]:
+    """Headlines from the last 7 days that mention any of the search terms (names of one company), as Google returns them.
+
+    Google keeps at most 100 results per search. The caller should still check the headlines: Google also matches
+    words that appear only in the body of an article.
+    """
+    any_name = " OR ".join(f'"{term.replace(chr(34), "")}"' for term in search_terms)
     params = {
-        "q": f'"{company_name}" (stock OR shares OR results) when:7d',
+        "q": f"({any_name}) when:7d",
         "hl": "en-IN",
         "gl": "IN",
         "ceid": "IN:en",

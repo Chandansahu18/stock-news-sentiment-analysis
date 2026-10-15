@@ -9,7 +9,6 @@ def isolated_env(tmp_path, monkeypatch):
     """Every test gets an empty cache folder, no real credentials, no model preload and no network for the stock list."""
     monkeypatch.setenv("CACHE_DIR", str(tmp_path / "cache"))
     monkeypatch.setenv("UPSTOX_ANALYTICS_TOKEN", "")
-    monkeypatch.setenv("NEWS_SOURCE", "auto")
     monkeypatch.setenv("NEWS_TTL_MINUTES", "30")
     monkeypatch.setenv("PRELOAD_ON_STARTUP", "false")
     from app.integrations import nse_listing, upstox

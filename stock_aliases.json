@@ -1,0 +1,14 @@
+{
+  "HINDPETRO":  ["HPCL", "Hindustan Petroleum"],
+  "BPCL":       ["Bharat Petroleum"],
+  "IOC":        ["IOCL", "IndianOil", "Indian Oil Corporation"],
+  "RELIANCE":   ["RIL"],
+  "HINDUNILVR": ["HUL"],
+  "LT":         ["L&T", "Larsen & Toubro", "Larsen and Toubro"],
+  "SBIN":       ["SBI", "State Bank of India"],
+  "BHARTIARTL": ["Airtel"],
+  "POWERGRID":  ["PGCIL", "Power Grid"],
+  "LICI":       ["LIC", "Life Insurance Corporation"],
+  "DRREDDY":    ["Dr Reddy's", "Dr. Reddy's"],
+  "HAL":        ["Hindustan Aeronautics"]
+}
